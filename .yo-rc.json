@@ -1,0 +1,12 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "isCreatingSolution": true,
+    "environment": "spo",
+    "version": "1.12.1",
+    "libraryName": "simple-html-viewer-webpart",
+    "libraryId": "278feb58-f871-4253-9755-10cc441191c5",
+    "packageManager": "yarn",
+    "isDomainIsolated": true,
+    "componentType": "webpart"
+  }
+}
