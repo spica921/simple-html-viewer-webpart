@@ -5,14 +5,11 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "gulp serve",
-    "build": "gulp bundle",
+    "build": "gulp bundle --ship && gulp package-solution --ship",
     "clean": "gulp clean",
     "test": "gulp test"
   },
   "dependencies": {
-    "react": "16.9.0",
-    "react-dom": "16.9.0",
-    "office-ui-fabric-react": "7.156.0",
     "@microsoft/sp-core-library": "1.12.1",
     "@microsoft/sp-property-pane": "1.12.1",
     "@microsoft/sp-webpart-base": "1.12.1",
@@ -20,8 +17,6 @@
     "@microsoft/sp-office-ui-fabric-core": "1.12.1"
   },
   "devDependencies": {
-    "@types/react": "16.9.36",
-    "@types/react-dom": "16.9.8",
     "@microsoft/sp-build-web": "1.12.1",
     "@microsoft/sp-tslint-rules": "1.12.1",
     "@microsoft/sp-module-interfaces": "1.12.1",

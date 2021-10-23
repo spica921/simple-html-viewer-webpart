@@ -2,9 +2,7 @@
 
 ## Summary
 
-Short summary on functionality and used technologies.
-
-[picture of the solution in action, if possible]
+Simply HTML viewer web parts.
 
 ## Used SharePoint Framework Version
 

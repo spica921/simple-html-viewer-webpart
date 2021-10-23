@@ -1,35 +1,67 @@
-import * as React from 'react';
-import * as ReactDom from 'react-dom';
 import { Version } from '@microsoft/sp-core-library';
 import {
   IPropertyPaneConfiguration,
   PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
-
 import * as strings from 'SimpleHtmlViewerWebPartStrings';
-import SimpleHtmlViewer from './components/SimpleHtmlViewer';
-import { ISimpleHtmlViewerProps } from './components/ISimpleHtmlViewerProps';
+import styles from './SimpleHtmlViewerWebPart.module.scss';
 
+/**
+ * Component props
+ */
 export interface ISimpleHtmlViewerWebPartProps {
   html: string;
 }
 
 export default class SimpleHtmlViewerWebPart extends BaseClientSideWebPart<ISimpleHtmlViewerWebPartProps> {
 
-  public render(): void {
-    const element: React.ReactElement<ISimpleHtmlViewerProps> = React.createElement(
-      SimpleHtmlViewer,
-      {
-        html: this.properties.html
-      }
-    );
+  /**
+   * Disable reactive property change.
+   * @returns true: disable
+   */
+  protected get disableReactivePropertyChanges(): boolean {
+    return true;
+  }
 
-    ReactDom.render(element, this.domElement);
+  public render(): void {
+    const html = this.properties.html ? this.properties.html : `<div class="${styles.simpleHtmlViewer}">
+        <div class="${styles.container}">
+          <div class="${styles.row}">
+            <div class="${styles.column}">
+              <i class="ms-Icon ms-Icon--IncidentTriangle" aria-hidden="true"></i>  
+              <p>Source is not setted.</p>
+            </div>
+          </div>
+        </div>
+      </div>`;
+
+
+    // contextを渡す
+    (window as any).___spContext___ = this.context;
+
+    this.loadHtml(this.domElement, html);
+  }
+
+  private loadHtml(elElement: HTMLElement, html: string) {
+
+    if (!html) {
+      console.error("Require HTML");
+    }
+
+    elElement.innerHTML = html || "";
+
+    const scripts = elElement.querySelectorAll("script");
+    /*
+    for (let i = 0; i < scripts.length; i++) {
+
+      
+
+    }
+    */
   }
 
   protected onDispose(): void {
-    ReactDom.unmountComponentAtNode(this.domElement);
   }
 
   protected get dataVersion(): Version {
@@ -48,7 +80,10 @@ export default class SimpleHtmlViewerWebPart extends BaseClientSideWebPart<ISimp
               groupName: strings.BasicGroupName,
               groupFields: [
                 PropertyPaneTextField('html', {
-                  label: strings.HTMLLabel
+                  label: strings.HTMLLabel,
+                  multiline: true,
+                  placeholder: 'Input markup',
+                  onGetErrorMessage: this.validateHTMLField.bind(this)
                 })
               ]
             }
@@ -56,5 +91,18 @@ export default class SimpleHtmlViewerWebPart extends BaseClientSideWebPart<ISimp
         }
       ]
     };
+  }
+
+
+  /**
+   * Validate HTML field
+   * @param value 
+   * @returns 
+   */
+  private validateHTMLField(value: string): string {
+    if (!value || !value.trim()) {
+      return 'HTML field must be inputed';
+    }
+    return '';
   }
 }
