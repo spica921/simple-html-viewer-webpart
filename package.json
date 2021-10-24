@@ -2,7 +2,15 @@
   "name": "root",
   "private": true,
   "useWorkspaces": true,
+  "workspaces": [
+    "webparts/*",
+    "packages/*"
+  ],
   "devDependencies": {
-    "lerna": "^4.0.0"
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "lerna": "^4.0.0",
+    "webpack-dev-server": "3.11.1"
   }
 }
