@@ -52,13 +52,20 @@ export default class SimpleHtmlViewerWebPart extends BaseClientSideWebPart<ISimp
     elElement.innerHTML = html || "";
 
     const scripts = elElement.querySelectorAll("script");
-    /*
+
+    // スクリプト部分を実行するため再作成して追加する
     for (let i = 0; i < scripts.length; i++) {
-
-      
-
+      const elScript = scripts[i];
+      const renewElScript = document.createElement("script");
+      if (elScript.src) {
+        renewElScript.src = elScript.src;
+      }
+      else {
+        renewElScript.text = elScript.text;
+      }
+      elElement.removeChild(elScript);
+      elElement.appendChild(renewElScript);
     }
-    */
   }
 
   protected onDispose(): void {

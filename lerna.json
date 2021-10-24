@@ -1,0 +1,7 @@
+{
+  "npmClient": "yarn",
+  "packages": [
+    "webparts/*"
+  ],
+  "version": "0.0.0"
+}
