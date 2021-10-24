@@ -11,9 +11,13 @@ import styles from './SimpleHtmlViewerWebPart.module.scss';
  * Component props
  */
 export interface ISimpleHtmlViewerWebPartProps {
+  /** WebPartに描画するHTML */
   html: string;
 }
 
+/**
+ * HTML描画webpart
+ */
 export default class SimpleHtmlViewerWebPart extends BaseClientSideWebPart<ISimpleHtmlViewerWebPartProps> {
 
   /**
@@ -40,41 +44,60 @@ export default class SimpleHtmlViewerWebPart extends BaseClientSideWebPart<ISimp
     // contextを渡す
     (window as any).___spContext___ = this.context;
 
+    // HTMLを読み込んで画面に反映する
     this.loadHtml(this.domElement, html);
   }
 
-  private loadHtml(elElement: HTMLElement, html: string) {
+  /**
+   * HTMLの読み込み
+   * @param parentElement HTMLを差し込む親HTML
+   * @param innerHtml 挿入するHTML
+   */
+  private loadHtml(parentElement: HTMLElement, innerHtml: string) {
 
-    if (!html) {
+    if (!innerHtml) {
       console.error("Require HTML");
     }
 
-    elElement.innerHTML = html || "";
+    // HTMLを親に差し込む
+    parentElement.innerHTML = innerHtml || "";
 
-    const scripts = elElement.querySelectorAll("script");
-
-    // スクリプト部分を実行するため再作成して追加する
-    for (let i = 0; i < scripts.length; i++) {
-      const elScript = scripts[i];
-      const renewElScript = document.createElement("script");
-      if (elScript.src) {
-        renewElScript.src = elScript.src;
+    // innerHTMLへの挿入だとscriptタグの内容が動かないため
+    // scriptをタグとして再度挿入することで動かす
+    const elScripts = parentElement.querySelectorAll("script");
+    for (let i = 0; i < elScripts.length; i++) {
+      const elOldScript = elScripts[i];
+      const elRenewScript = document.createElement("script");
+      if (elOldScript.src) {
+        elRenewScript.src = elOldScript.src;
       }
       else {
-        renewElScript.text = elScript.text;
+        elRenewScript.text = elOldScript.text;
       }
-      elElement.removeChild(elScript);
-      elElement.appendChild(renewElScript);
+
+      // scriptタグの差し替え
+      parentElement.removeChild(elOldScript);
+      parentElement.appendChild(elRenewScript);
     }
   }
 
+  /**
+   * Dispose
+   */
   protected onDispose(): void {
   }
 
+  /**
+   * Component version
+   */
   protected get dataVersion(): Version {
     return Version.parse('1.0');
   }
 
+  /**
+   * Property configuration
+   * @returns Property configuration
+   */
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
       pages: [
