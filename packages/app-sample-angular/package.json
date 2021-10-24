@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:sp": "ng build --aot --base-href=. --deploy-url=../AppAssets/samples/angular/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
